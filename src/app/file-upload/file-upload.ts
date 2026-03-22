@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { UploadEvent, UploadFile } from '../core/upload-file-service/upload-file';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe, CommonModule, JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-file-upload',
-  imports: [AsyncPipe,JsonPipe],
+  imports: [AsyncPipe,JsonPipe,CommonModule],
   templateUrl: './file-upload.html',
   styleUrl: './file-upload.scss',
 })

@@ -1,27 +1,81 @@
-<input type="file" (change)="attachFile($event)">
+<section class="hero-section">
+  <div class="container">
 
-@if (uploadState$ | async; as state) {
-
-  @if (state.type === 'progress') {
-    <div>
-      <p>Uploading... </p>
-      <progress [value]="state.value" max="100"></progress>
-      {{ state.value }}%
-
-      <button (click)="cancelUpload()">Cancel</button>
+    <!-- Hero Header -->
+    <div class="hero-header">
+      <h1 class="hero-title">Upload Your Files Effortlessly</h1>
+      <p class="hero-subtitle">
+        Real-time progress, cancel anytime, and full feedback.
+      </p>
     </div>
-  }
 
-  @if (state.type === 'success') {
-    <div>
-      <p>Upload complete!</p>
-      <pre>{{ state.body | json }}</pre>
-    </div>
-  }
+    <!-- Upload Card -->
+    <div class="upload-card">
+      <label class="upload-area">
+        <input type="file" (change)="attachFile($event)" />
+        <div class="upload-content">
+          <span class="upload-icon">📤</span>
+          <span class="upload-text">Click or drag your file to upload</span>
+        </div>
+      </label>
 
-  @if (state.type === 'error') {
-    <div>
-      <p> Upload failed: {{ state.message }}</p>
-    </div>
-  }
+      <!-- Upload State -->
+       @if(uploadState$ | async ; as state){
+
+         <div class="upload-state" >
+
+           <!-- Progress -->
+            @if(state.type === 'progress'){
+
+              <div class="progress-wrapper">
+                <p>Uploading... {{ state.value }}%</p>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" [style.width.%]="state.value"></div>
+                </div>
+                <button class="btn-cancel" (click)="cancelUpload()">Cancel</button>
+              </div>
+            }
+
+            @if(state.type === 'success'){
+
+           <!-- Success -->
+           <div class="success-wrapper" >
+             <p>Upload Complete! ✅</p>
+             <pre class="code-snippet">{{ state.body | json }}</pre>
+           </div>
+            }
+
+@if(state.type === 'error'){
+
+  <!-- Error -->
+  <div class="error-wrapper" >
+    <p>Upload Failed ⚠️ : {{ state.message }}</p>
+  </div>
 }
+         </div>
+       }
+    </div>
+
+    <!--  Code Showcase -->
+    <div class="marketing-section">
+  <h2>How it Works</h2>
+  <p>We built it with Angular, RxJS Observables, and simple but powerful UI interactions.</p>
+
+  <pre class="code-snippet">
+import &#123; Component &#125; from '@angular/core';
+import &#123; Observable, Subject, takeUntil &#125; from 'rxjs';
+import &#123; UploadEvent, UploadFile &#125; from '../core/upload-file-service/upload-file';
+
+@Component(&#123; ... &#125;)
+export class FileUpload &#123;
+  uploadState$!: Observable&lt;UploadEvent&gt;;
+  private cancel$ = new Subject&lt;void&gt;();
+
+  attachFile(event: Event) &#123; ... &#125;
+  cancelUpload() &#123; ... &#125;
+&#125;
+  </pre>
+</div>
+
+  </div>
+</section>
