@@ -1,3 +1,27 @@
-<div class="file-upload">
-  <input type="file" name="file" id="file" />
-</div>
+<input type="file" (change)="attachFile($event)">
+
+@if (uploadState$ | async; as state) {
+
+  @if (state.type === 'progress') {
+    <div>
+      <p>Uploading... </p>
+      <progress [value]="state.value" max="100"></progress>
+      {{ state.value }}%
+
+      <button (click)="cancelUpload()">Cancel</button>
+    </div>
+  }
+
+  @if (state.type === 'success') {
+    <div>
+      <p>Upload complete!</p>
+      <pre>{{ state.body | json }}</pre>
+    </div>
+  }
+
+  @if (state.type === 'error') {
+    <div>
+      <p> Upload failed: {{ state.message }}</p>
+    </div>
+  }
+}
