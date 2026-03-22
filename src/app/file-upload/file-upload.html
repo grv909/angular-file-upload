@@ -1,27 +1,58 @@
-<input type="file" (change)="attachFile($event)">
+<section class="hero-section">
+  <div class="container">
 
-@if (uploadState$ | async; as state) {
-
-  @if (state.type === 'progress') {
-    <div>
-      <p>Uploading... </p>
-      <progress [value]="state.value" max="100"></progress>
-      {{ state.value }}%
-
-      <button (click)="cancelUpload()">Cancel</button>
+    <!-- Hero Header -->
+    <div class="hero-header">
+      <h1 class="hero-title">Upload Your Files</h1>
+      <p class="hero-subtitle">
+        Upload multiple files and see them listed below.
+      </p>
     </div>
-  }
 
-  @if (state.type === 'success') {
-    <div>
-      <p>Upload complete!</p>
-      <pre>{{ state.body | json }}</pre>
-    </div>
-  }
+    <!-- Upload Card -->
+    <div class="upload-card">
+      <label class="upload-area">
+        <input type="file" (change)="attachFile($event)" />
+        <div class="upload-content">
+          <span class="upload-icon">📤</span>
+          <span class="upload-text">Click or drag a file to upload</span>
+        </div>
+      </label>
 
-  @if (state.type === 'error') {
-    <div>
-      <p> Upload failed: {{ state.message }}</p>
+      <!-- Upload State -->
+      <div class="upload-state" *ngIf="uploadState$ | async as state">
+        <div class="progress-wrapper" *ngIf="state.type === 'progress'">
+          <p>Uploading... {{ state.value }}%</p>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" [style.width.%]="state.value"></div>
+          </div>
+          <button class="btn-cancel" (click)="cancelUpload()">Cancel</button>
+        </div>
+
+        <div class="success-wrapper" *ngIf="state.type === 'success'">
+          <p>Upload Complete! ✅</p>
+        </div>
+
+        <div class="error-wrapper" *ngIf="state.type === 'error'">
+          <p>Upload Failed ⚠️ : {{ state.message }}</p>
+        </div>
+      </div>
     </div>
-  }
-}
+
+    <!-- Uploaded Files List -->
+    <div class="uploaded-files" *ngIf="uploadedFiles.length > 0">
+      <h2>Uploaded Files</h2>
+      <div class="file-card" *ngFor="let file of uploadedFiles; let i = index">
+        <div class="file-info">
+          <div class="file-name">{{ file.name }}</div>
+          <div class="file-meta">
+            <span class="file-type">{{ file.type }}</span>
+            <span class="file-size">{{ (file.size / 1024).toFixed(2) }} KB</span>
+          </div>
+        </div>
+        <button class="btn-delete" (click)="deleteUploadedFile(i)">🗑️</button>
+      </div>
+    </div>
+
+  </div>
+</section>
