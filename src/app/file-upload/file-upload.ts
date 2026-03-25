@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { UploadEvent, UploadFile } from '../core/upload-file-service/upload-file';
 import { AsyncPipe, CommonModule, JsonPipe } from '@angular/common';
@@ -11,7 +11,7 @@ interface UploadedFile {
 
 @Component({
   selector: 'app-file-upload',
-  imports: [AsyncPipe, JsonPipe, CommonModule],
+  imports: [AsyncPipe, CommonModule],
   templateUrl: './file-upload.html',
   styleUrl: './file-upload.scss',
 })
@@ -21,7 +21,10 @@ export class FileUpload {
 
   uploadedFiles: UploadedFile[] = [];
 
-  constructor(private uploadService: UploadFile) {}
+  constructor(
+    private uploadService: UploadFile,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   attachFile(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -46,6 +49,7 @@ export class FileUpload {
             type: file.type || 'unknown',
           },
         ];
+        this.cdr.markForCheck();
       }
     });
   }
